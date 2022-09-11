@@ -150,3 +150,6 @@ data/
 logs/
 .env
 .autoenv
+dockerMount/
+input.jpg
+imagenet_1k.json

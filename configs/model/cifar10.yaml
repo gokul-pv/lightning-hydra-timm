@@ -1,0 +1,13 @@
+_target_: src.models.cifar10_module.CIFAR10LitModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+
+net:
+  _target_: src.models.cifar10_module.create_model
+  model: resnet18
+  input_ch: 3
+  num_cls: 10

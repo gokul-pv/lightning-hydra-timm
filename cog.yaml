@@ -1,0 +1,8 @@
+build:
+  python_version: "3.10"
+  python_packages:
+    - torch==1.12.1
+    - torchvision==0.13.1
+    - timm==0.6.7
+    - pyrootutils==1.0.4
+predict: "predict.py:Predictor"
