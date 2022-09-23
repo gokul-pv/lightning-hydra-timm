@@ -8,7 +8,6 @@ defaults:
   - override /model: cifar10.yaml
   - override /callbacks: default.yaml
   - override /trainer: default.yaml
-  - override /logger: tensorboard.yaml
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
@@ -18,10 +17,5 @@ tags: ["cifar10", "resnet18"]
 seed: 12345
 
 trainer:
-  accelerator: auto
   min_epochs: 1
-  max_epochs: 10
-  gradient_clip_val: 0.5
-
-datamodule:
-  num_workers: 0
+  max_epochs: 5

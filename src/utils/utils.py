@@ -141,6 +141,7 @@ def log_hyperparameters(object_dict: dict) -> None:
     cfg = object_dict["cfg"]
     model = object_dict["model"]
     trainer = object_dict["trainer"]
+    metric = object_dict["metrics"]
 
     if not trainer.logger:
         log.warning("Logger not found! Skipping hyperparameter logging...")
@@ -169,7 +170,7 @@ def log_hyperparameters(object_dict: dict) -> None:
     hparams["seed"] = cfg.get("seed")
 
     # send hparams to all loggers
-    trainer.logger.log_hyperparams(hparams)
+    trainer.logger.log_hyperparams(hparams, metrics=metric["val/loss"].item())
 
 
 def get_metric_value(metric_dict: dict, metric_name: str) -> float:

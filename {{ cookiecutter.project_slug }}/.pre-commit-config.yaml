@@ -65,12 +65,7 @@ repos:
       - id: bandit
         args: ["-s", "B101"]
 
-  # yaml formatting
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.7.1
-    hooks:
-      - id: prettier
-        types: [yaml]
+
 
   # shell scripts linter
   - repo: https://github.com/shellcheck-py/shellcheck-py
