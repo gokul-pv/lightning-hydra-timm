@@ -12,7 +12,6 @@ repos:
       - id: check-yaml
       - id: debug-statements
       - id: detect-private-key
-      - id: check-executables-have-shebangs
       - id: check-toml
       - id: check-case-conflict
       - id: check-added-large-files
@@ -94,24 +93,3 @@ repos:
         args:
           - --skip=logs/**,data/**,*.ipynb
           # - --ignore-words-list=abc,def
-
-  # jupyter notebook cell output clearing
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.5.0
-    hooks:
-      - id: nbstripout
-
-  # jupyter notebook linting
-  - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.4.0
-    hooks:
-      - id: nbqa-black
-        args: ["--line-length=99"]
-      - id: nbqa-isort
-        args: ["--profile=black"]
-      - id: nbqa-flake8
-        args:
-          [
-            "--extend-ignore=E203,E402,E501,F401,F841",
-            "--exclude=logs/*,data/*",
-          ]
