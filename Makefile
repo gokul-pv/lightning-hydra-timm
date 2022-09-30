@@ -41,5 +41,8 @@ debug: ## Enter debugging mode with pdb
 	#
 	python -m pdb src/train.py debug=default
 
-build: ## build a docke image
-	docker build -t gokulpv/lighteninghydratimm .
+build-train: ## build a docke image
+	docker build -t gokulpv/lighteninghydratimm -f dockers/train/Dockerfile .
+
+build-demo:
+	docker build -t gokulpv/demogradio -f dockers/demo-gradio/Dockerfile .

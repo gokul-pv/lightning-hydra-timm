@@ -34,6 +34,7 @@ from typing import List, Optional, Tuple
 
 import hydra
 import pytorch_lightning as pl
+import torch
 from omegaconf import DictConfig
 from pytorch_lightning import Callback, LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.loggers import LightningLoggerBase
@@ -77,12 +78,6 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
     trainer: Trainer = hydra.utils.instantiate(cfg.trainer, callbacks=callbacks, logger=logger)
 
-    if cfg.get("train"):
-        log.info("Starting training!")
-        trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
-
-    train_metrics = trainer.callback_metrics
-
     object_dict = {
         "cfg": cfg,
         "datamodule": datamodule,
@@ -90,12 +85,36 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         "callbacks": callbacks,
         "logger": logger,
         "trainer": trainer,
-        "metrics": train_metrics,
+        # "metrics": train_metrics,
     }
 
     if logger:
         log.info("Logging hyperparameters!")
         utils.log_hyperparameters(object_dict)
+
+    if cfg.get("train"):
+        log.info("Starting training!")
+        trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
+
+    train_metrics = trainer.callback_metrics
+
+    if cfg.get("script"):
+        log.info("Scripting Model ...")
+
+        scripted_model = model.cpu().to_torchscript(method="script")
+        torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model.scripted.pt")
+
+        log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.scripted.pt")
+
+    if cfg.get("trace"):
+        pass
+        # log.info("Tracing Model ...")
+
+        # example = torch.rand(1, 3, 224, 224)
+        # traced_model = torch.jit.trace_module(model.cpu(), inputs={"forward":example,"pass_jit":example})
+        # torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
+
+        # log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
 
     if cfg.get("test"):
         log.info("Starting testing!")

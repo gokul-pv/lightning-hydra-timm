@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - paths: default.yaml
+  - hydra: default.yaml
+
+task_name: "demo_scripted"
+
+# checkpoint is necessary for demo
+ckpt_path: ???

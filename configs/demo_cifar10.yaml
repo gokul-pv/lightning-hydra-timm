@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - datamodule: cifar10.yaml
+  - model: cifar10.yaml # very important
+  - callbacks: default.yaml
+  - logger: tensorboard.yaml
+  - trainer: default.yaml
+  - paths: default.yaml
+  - extras: default.yaml
+  - hydra: default.yaml
+  - experiment: null
+
+task_name: "demo"
+
+# checkpoint is necessary for demo
+ckpt_path: ???

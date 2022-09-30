@@ -18,6 +18,9 @@ hydra-optuna-sweeper==1.2.0
 # mlflow
 # comet-ml
 
+# UI for demo
+gradio==3.3.1
+
 # --------- others --------- #
 pyrootutils     # standardizing the project root setup
 pre-commit      # hooks for applying linters on commit

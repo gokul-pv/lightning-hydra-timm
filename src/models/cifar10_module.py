@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
+from torchvision import transforms as T
 
 
 def create_model(model, input_ch=3, num_cls=10):
@@ -61,8 +62,24 @@ class CIFAR10LitModule(LightningModule):
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
 
+        self.predict_transform = torch.nn.Sequential(
+            T.Resize([224, 224]),
+            T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        )
+
     def forward(self, x: torch.Tensor):
         return self.net(x)
+
+    @torch.jit.export
+    def pass_jit(self, x: torch.Tensor):
+        with torch.no_grad():
+            # transform the inputs
+            x = self.predict_transform(x)
+            # forward pass
+            logits = self(x)
+            preds = F.softmax(logits, dim=-1)
+
+        return preds
 
     def on_train_start(self):
         # by default lightning executes validation step sanity checks before training starts,
@@ -102,6 +119,7 @@ class CIFAR10LitModule(LightningModule):
         self.val_acc(preds, targets)
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("hp_metric", self.val_loss)
 
         return {"loss": loss, "preds": preds, "targets": targets}
 

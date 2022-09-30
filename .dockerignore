@@ -3,6 +3,5 @@
 .vscode
 dockerMount
 data/*
-logs/*
 eval.log
 train.log
