@@ -9,3 +9,5 @@ task_name: "demo_scripted"
 
 # checkpoint is necessary for demo
 ckpt_path: ???
+
+server_name: "0.0.0.0"

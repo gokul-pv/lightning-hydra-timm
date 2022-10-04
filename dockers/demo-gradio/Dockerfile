@@ -11,6 +11,6 @@ COPY src/utils/ src/utils/
 COPY configs/demo_cifar10_scripted.yaml configs/
 COPY configs/hydra/ configs/hydra
 COPY configs/paths/ configs/paths
-COPY logs/train/runs/2022-09-29_22-38-51/model.scripted.pt pyproject.toml ./
+COPY logs/train/runs/2022-10-04_10-13-22/model.scripted.pt pyproject.toml ./
 
 CMD ["python", "src/demo_cifar10_scripted.py", "ckpt_path=model.scripted.pt" ]

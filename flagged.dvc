@@ -1,0 +1,5 @@
+outs:
+- md5: 2323a63111354d408a6e448b99e34e9e.dir
+  size: 6780
+  nfiles: 3
+  path: flagged

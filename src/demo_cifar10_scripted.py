@@ -66,7 +66,7 @@ def demo_gradio(cfg: DictConfig) -> Tuple[dict, dict]:
         outputs=[gr.Label(num_top_classes=10)],
     )
 
-    demo.launch()
+    demo.launch(server_name=cfg.server_name, server_port=8080)
 
 
 @hydra.main(

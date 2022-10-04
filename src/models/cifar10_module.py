@@ -13,7 +13,7 @@ from torchvision import transforms as T
 def create_model(model, input_ch=3, num_cls=10):
     """Load a model from timm."""
     timm_model = timm.models.create_model(
-        model, pretrained=False, in_chans=input_ch, num_classes=num_cls
+        model, pretrained=True, in_chans=input_ch, num_classes=num_cls
     )
     return timm_model
 
