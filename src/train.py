@@ -107,14 +107,16 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.scripted.pt")
 
     if cfg.get("trace"):
-        pass
-        # log.info("Tracing Model ...")
+        # pass
+        log.info("Tracing Model ...")
 
-        # example = torch.rand(1, 3, 224, 224)
-        # traced_model = torch.jit.trace_module(model.cpu(), inputs={"forward":example,"pass_jit":example})
-        # torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
+        example = torch.rand(1, 3, 224, 224)
+        traced_model = torch.jit.trace_module(
+            model.cpu(), inputs={"forward": example, "pass_jit": example}
+        )
+        torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
 
-        # log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
+        log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
 
     if cfg.get("test"):
         log.info("Starting testing!")

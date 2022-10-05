@@ -46,3 +46,6 @@ build-train: ## build a docke image
 
 build-demo:
 	docker build -t gokulpv/demogradio -f dockers/demo-gradio/Dockerfile .
+
+build-demo-traced:
+	docker build -t gokulpv/demogradiotraced -f dockers/demo-gradio-traced/Dockerfile .

@@ -70,7 +70,7 @@ class CIFAR10LitModule(LightningModule):
     def forward(self, x: torch.Tensor):
         return self.net(x)
 
-    @torch.jit.export
+    # @torch.jit.export
     def pass_jit(self, x: torch.Tensor):
         with torch.no_grad():
             # transform the inputs
