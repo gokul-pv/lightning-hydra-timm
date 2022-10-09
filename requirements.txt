@@ -21,6 +21,10 @@ hydra-optuna-sweeper==1.2.0
 # UI for demo
 gradio==3.3.1
 
+#AWS
+boto3==1.24.88
+awscli==1.25.90
+
 # --------- others --------- #
 pyrootutils     # standardizing the project root setup
 pre-commit      # hooks for applying linters on commit

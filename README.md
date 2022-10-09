@@ -13,10 +13,9 @@
 
 ## Description
 
--   Convenient all-in-one technology stack for deep learning prototyping - allows you to rapidly iterate over new models provided with timm, datasets and tasks on different hardware accelerators like CPUs, multi-GPUs or TPUs.
--   A collection of best practices for efficient workflow and reproducibility.
--   Thoroughly commented - you can use this repo as a reference and educational resource.
-  
+- Convenient all-in-one technology stack for deep learning prototyping - allows you to rapidly iterate over new models provided with timm, datasets and tasks on different hardware accelerators like CPUs, multi-GPUs or TPUs.
+- A collection of best practices for efficient workflow and reproducibility.
+- Thoroughly commented - you can use this repo as a reference and educational resource.
 
 ## Main Technologies
 
@@ -28,7 +27,7 @@
 
 ## How to run
 
-Install dependencies
+- Install dependencies
 
 ```bash
 # clone project
@@ -46,7 +45,7 @@ conda activate myenv
 pip install -r requirements.txt
 ```
 
-Train model with default configuration
+- Train model with default configuration
 
 ```bash
 # train on CPU
@@ -56,35 +55,37 @@ python src/train.py trainer=cpu
 python src/train.py trainer=gpu
 ```
 
-Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)
+- Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)
 
 ```bash
 python src/train.py experiment=experiment_name.yaml
 ```
 
-You can override any parameter from command line like this
+- You can override any parameter from command line like this
 
 ```bash
 python src/train.py trainer.max_epochs=20 datamodule.batch_size=64
 ```
 
-For training CIFAR10 dataset using Resnet18 from timm
+- For training CIFAR10 dataset using Resnet18 from timm
 
 ```bash
 # For training
 python src/train.py experiment=cifar10_example
+
 # To build docker image run
 make build-train
 # or
 docker build -t gokulpv/lighteninghydratimm -f dockers/train/Dockerfile .
 # or pull from Docker hub
 docker pull gokulpv/lighteninghydratimm:latest
+
 # To run the docker image. NOTE: To get the trained model checkpoint and all the logs on the host machine, you'll have to volume mount your directory inside docker.
 docker run -it --volume /workspace/lightning-hydra-timm/dockerMount:/opt/src/logs gokulpv/lighteninghydratimm python src/train.py experiment=cifar10_example
 
 ```
 
-To do a Hyperparam sweep for CIFAR10 dataset with Resnet18 from timm, 
+- To do a Hyperparam sweep for CIFAR10 dataset with Resnet18 from timm,
 
 ```bash
 # Hyperparam sweep using optuna
@@ -93,19 +94,19 @@ python src/train.py -m experiment=cifar10_example hparams_search=cifar10_optuna
 # Sample data and logs can be pulled from google drive using dvc
 dvc pull -r gdrive
 
-# Logs are also available at 
+# Logs are also available at
 https://tensorboard.dev/experiment/4Eki3IjVTGaSGtgE4HnCGg/#scalars
 
 ```
 
-To build a demo app for deployment using gradio,
+- To build a demo app for deployment using gradio,
 
 ```bash
 # Train cifar10 using resnet18 from timm and save model using torch trace
 python src/train.py experiment=cifar10_example trace=True
 
 # Launch demo using checkpoint
-python src/demo_cifar10_scripted.py ckpt_path=logs/<run folder>/model.traced.pt 
+python src/demo_cifar10_scripted.py ckpt_path=logs/<run folder>/model.traced.pt
 
 # Build docker using
 make build-demo-traced
@@ -114,7 +115,7 @@ docker build -t gokulpv/demogradiotraced -f dockers/demo-gradio-traced/Dockerfil
 # Pull image from docker hub
 docker pull gokulpv/demogradiotraced:latest
 # Run the docker using
-docker run -p 8080:8080 -it gokulpv/demogradiotraced:latest 
+docker run -p 8080:8080 -it gokulpv/demogradiotraced:latest
 
 
 # To save trained model using torch script, switch to commit 68a338b and run
@@ -125,4 +126,27 @@ make build-demo
 docker pull gokulpv/demogradio:latest
 ```
 
+- To download traced model from AWS S3 and run the demo application, do the following:
 
+```bash
+# Train cifar10 using resnet18 from timm and save traced model to S3
+# Refer s3://myemlobucket/models/model_s3.traced.pt
+
+# To build docker image, run
+make build-demo-aws
+# or pull the image from docker hub
+docker pull gokulpv/demogradioaws:latest
+# or from AWS ECR
+docker pull public.ecr.aws/j7y6i3l0/demogradio:latest
+# Run the docker using
+docker run -p 80:80 -it gokulpv/demogradioaws:latest
+
+# To download the model from custom S3 path and log the result to custom S3 path
+make build-demo-aws-env
+# or pull the image
+docker pull gokulpv/demogradioawsenv:latest
+# or
+docker pull public.ecr.aws/j7y6i3l0/demogradio:envvar
+# Run the docker using
+docker run -p 80:80 -it -e "model=s3://myemlobucket/models/model_s3.traced.pt" -e "flagged_dir=s3://myemlobucket/logs/" gokulpv/demogradioawsenv:latest
+```

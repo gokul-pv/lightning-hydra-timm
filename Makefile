@@ -49,3 +49,9 @@ build-demo:
 
 build-demo-traced:
 	docker build -t gokulpv/demogradiotraced -f dockers/demo-gradio-traced/Dockerfile .
+
+build-demo-aws:
+	docker build -t gokulpv/demogradioaws -f dockers/demo-gradio-aws/Dockerfile .
+
+build-demo-aws-env:
+	docker build -t gokulpv/demogradioawsenv -f dockers/demo-gradio-aws-env/Dockerfile .
