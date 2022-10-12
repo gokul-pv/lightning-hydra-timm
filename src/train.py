@@ -110,9 +110,10 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         # pass
         log.info("Tracing Model ...")
 
-        example = torch.rand(1, 3, 224, 224)
+        example_forward = torch.rand(1, 3, 224, 224, dtype=torch.float32)
+        example_pass = torch.rand(1, 3, 28, 28, dtype=torch.float32)
         traced_model = torch.jit.trace_module(
-            model.cpu(), inputs={"forward": example, "pass_jit": example}
+            model.cpu(), inputs={"forward": example_forward, "pass_jit": example_pass}
         )
         torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
 

@@ -38,10 +38,10 @@ def demo_gradio(cfg: DictConfig) -> Tuple[dict, dict]:
         model_name = model_env.split("/")[-1]
     else:
         log.info(
-            "Model will be downloaded from default path s3://myemlobucket/models/model_s3.traced.pt"
+            "Model will be downloaded from default path s3://myemlobucket/models/model_s3.scripted.pt"
         )
-        os.system("aws s3 cp s3://myemlobucket/models/model_s3.traced.pt .")
-        model_name = "model_s3.traced.pt"
+        os.system("aws s3 cp s3://myemlobucket/models/model_s3.scripted.pt .")
+        model_name = "model_s3.scripted.pt"
         # s3 = boto3.client("s3")
         # s3.download_file("myemlobucket", "models/model_s3.traced.pt", "model_s3.traced.pt")
     if upload_dir_env:
@@ -72,7 +72,8 @@ def demo_gradio(cfg: DictConfig) -> Tuple[dict, dict]:
     def recognize_cifar10(image):
         if image is None:
             return None
-        image = torch.tensor(image.reshape((1, 3, 28, 28)), dtype=torch.float32)
+        image = torch.Tensor(image / 255)
+        image = image.permute(2, 0, 1).unsqueeze(0)
         preds = model.pass_jit(image)
         preds = preds[0].tolist()
         return {categories[i]: preds[i] for i in range(10)}

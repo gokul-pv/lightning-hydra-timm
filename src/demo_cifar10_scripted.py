@@ -53,7 +53,8 @@ def demo_gradio(cfg: DictConfig) -> Tuple[dict, dict]:
     def recognize_cifar10(image):
         if image is None:
             return None
-        image = torch.tensor(image.reshape((1, 3, 28, 28)), dtype=torch.float32)
+        image = torch.Tensor(image / 255)
+        image = image.permute(2, 0, 1).unsqueeze(0)
         preds = model.pass_jit(image)
         preds = preds[0].tolist()
         return {categories[i]: preds[i] for i in range(10)}

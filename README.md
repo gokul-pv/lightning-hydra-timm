@@ -126,11 +126,11 @@ make build-demo
 docker pull gokulpv/demogradio:latest
 ```
 
-- To download traced model from AWS S3 and run the demo application, do the following:
+- To download scripted model from AWS S3 and run the demo application, do the following:
 
 ```bash
-# Train cifar10 using resnet18 from timm and save traced model to S3
-# Refer s3://myemlobucket/models/model_s3.traced.pt
+# Train cifar10 using resnet18 from timm and save scripted model to S3
+# Refer s3://myemlobucket/models/model_s3.scripted.pt
 
 # To build docker image, run
 make build-demo-aws

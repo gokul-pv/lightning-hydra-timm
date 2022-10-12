@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt && rm -rf /root/.cache/pip
 
-ENV model s3://myemlobucket/models/model_s3.traced.pt
+ENV model s3://myemlobucket/models/model_s3.scripted.pt
 ENV flagged_dir s3://myemlobucket/logs/
 
 COPY src/demo_cifar10_aws.py src/
