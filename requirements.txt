@@ -22,7 +22,7 @@ hydra-optuna-sweeper==1.2.0
 gradio==3.3.1
 
 #AWS
-boto3==1.24.88
+boto3==1.24.94
 awscli==1.25.90
 
 # --------- others --------- #
