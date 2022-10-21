@@ -4,6 +4,7 @@ import timm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from fairscale.nn import auto_wrap, checkpoint_wrapper, wrap
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
@@ -67,6 +68,9 @@ class CIFAR10LitModule(LightningModule):
             T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
         )
 
+    def configure_sharded_model(self):
+        self.net = auto_wrap(self.net)
+
     def forward(self, x: torch.Tensor):
         return self.net(x)
 
@@ -99,8 +103,17 @@ class CIFAR10LitModule(LightningModule):
         # update and log metrics
         self.train_loss(loss)
         self.train_acc(preds, targets)
-        self.log("train/loss", self.train_loss, on_step=True, on_epoch=True, prog_bar=True)
-        self.log("train/acc", self.train_acc, on_step=True, on_epoch=True, prog_bar=True)
+        self.log(
+            "train/loss",
+            self.train_loss,
+            on_step=True,
+            on_epoch=True,
+            prog_bar=True,
+            sync_dist=True,
+        )
+        self.log(
+            "train/acc", self.train_acc, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True
+        )
 
         # we can return here dict with any tensors
         # and then read it in some callback or in `training_epoch_end()` below
@@ -117,9 +130,13 @@ class CIFAR10LitModule(LightningModule):
         # update and log metrics
         self.val_loss(loss)
         self.val_acc(preds, targets)
-        self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("hp_metric", self.val_loss)
+        self.log(
+            "val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True
+        )
+        self.log(
+            "val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True
+        )
+        self.log("hp_metric", self.val_loss, sync_dist=True)
 
         return {"loss": loss, "preds": preds, "targets": targets}
 
@@ -128,7 +145,7 @@ class CIFAR10LitModule(LightningModule):
         self.val_acc_best(acc)  # update best so far val acc
         # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
         # otherwise metric would be reset by lightning after each epoch
-        self.log("val/acc_best", self.val_acc_best.compute(), prog_bar=True)
+        self.log("val/acc_best", self.val_acc_best.compute(), prog_bar=True, sync_dist=True)
 
     def test_step(self, batch: Any, batch_idx: int):
         loss, preds, targets = self.step(batch)
@@ -136,8 +153,17 @@ class CIFAR10LitModule(LightningModule):
         # update and log metrics
         self.test_loss(loss)
         self.test_acc(preds, targets)
-        self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log(
+            "test/loss",
+            self.test_loss,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=True,
+            sync_dist=True,
+        )
+        self.log(
+            "test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True
+        )
 
         return {"loss": loss, "preds": preds, "targets": targets}
 

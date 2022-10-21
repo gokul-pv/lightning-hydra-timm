@@ -97,38 +97,40 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
 
     train_metrics = trainer.callback_metrics
+    test_metrics = {}
 
-    if cfg.get("script"):
-        log.info("Scripting Model ...")
+    if trainer.node_rank == 0:
+        if cfg.get("script"):
+            log.info("Scripting Model ...")
 
-        scripted_model = model.cpu().to_torchscript(method="script")
-        torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model.scripted.pt")
+            scripted_model = model.cpu().to_torchscript(method="script")
+            torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model.scripted.pt")
 
-        log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.scripted.pt")
+            log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.scripted.pt")
 
-    if cfg.get("trace"):
-        # pass
-        log.info("Tracing Model ...")
+        if cfg.get("trace"):
+            # pass
+            log.info("Tracing Model ...")
 
-        example_forward = torch.rand(1, 3, 224, 224, dtype=torch.float32)
-        example_pass = torch.rand(1, 3, 28, 28, dtype=torch.float32)
-        traced_model = torch.jit.trace_module(
-            model.cpu(), inputs={"forward": example_forward, "pass_jit": example_pass}
-        )
-        torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
+            example_forward = torch.rand(1, 3, 224, 224, dtype=torch.float32)
+            example_pass = torch.rand(1, 3, 28, 28, dtype=torch.float32)
+            traced_model = torch.jit.trace_module(
+                model.cpu(), inputs={"forward": example_forward, "pass_jit": example_pass}
+            )
+            torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
 
-        log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
+            log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
 
-    if cfg.get("test"):
-        log.info("Starting testing!")
-        ckpt_path = trainer.checkpoint_callback.best_model_path
-        if ckpt_path == "":
-            log.warning("Best ckpt not found! Using current weights for testing...")
-            ckpt_path = None
-        trainer.test(model=model, datamodule=datamodule, ckpt_path=ckpt_path)
-        log.info(f"Best ckpt path: {ckpt_path}")
+        if cfg.get("test"):
+            log.info("Starting testing!")
+            ckpt_path = trainer.checkpoint_callback.best_model_path
+            if ckpt_path == "":
+                log.warning("Best ckpt not found! Using current weights for testing...")
+                ckpt_path = None
+            trainer.test(model=model, datamodule=datamodule, ckpt_path=ckpt_path)
+            log.info(f"Best ckpt path: {ckpt_path}")
 
-    test_metrics = trainer.callback_metrics
+        test_metrics = trainer.callback_metrics
 
     # merge train and test metrics
     metric_dict = {**train_metrics, **test_metrics}

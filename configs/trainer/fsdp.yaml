@@ -1,0 +1,8 @@
+defaults:
+  - default.yaml
+
+strategy: fsdp
+
+accelerator: gpu
+devices: 4
+precision: 16

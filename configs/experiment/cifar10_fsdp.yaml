@@ -1,0 +1,27 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: cifar10.yaml
+  - override /model: cifar10.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: fsdp.yaml
+  # - override /logger: tensorboard.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["cifar10", "resnet18"]
+
+seed: 12345
+
+trainer:
+  min_epochs: 10
+  max_epochs: 25
+  devices: 4
+  num_nodes: 1
+
+datamodule:
+  num_workers: 8

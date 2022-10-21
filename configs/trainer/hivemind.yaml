@@ -1,0 +1,10 @@
+defaults:
+  - default.yaml
+
+strategy:
+  _target_: pytorch_lightning.strategies.HivemindStrategy
+  target_batch_size: 8192
+
+accelerator: gpu
+devices: 1
+num_nodes: 1
