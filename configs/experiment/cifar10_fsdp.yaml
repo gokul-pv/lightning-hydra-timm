@@ -8,20 +8,30 @@ defaults:
   - override /model: cifar10.yaml
   - override /callbacks: default.yaml
   - override /trainer: fsdp.yaml
-  # - override /logger: tensorboard.yaml
+  - override /logger: tensorboard.yaml
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["cifar10", "resnet18"]
+tags: ["cifar10", "vit_base_patch32_224"]
 
 seed: 12345
 
 trainer:
   min_epochs: 10
   max_epochs: 25
-  devices: 4
-  num_nodes: 1
+  devices: 1
+  num_nodes: 4
+  default_root_dir: /home/gokul/lightning-hydra-timm/logs/exp # due to issue https://github.com/ashleve/lightning-hydra-template/issues/393
 
 datamodule:
-  num_workers: 8
+  num_workers: 4
+  batch_size: 320
+
+model:
+  net:
+    model: vit_base_patch32_224
+
+callbacks:
+  model_checkpoint:
+    dirpath: /home/gokul/lightning-hydra-timm/logs/exp/checkpoints

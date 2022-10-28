@@ -1,0 +1,131 @@
+[2022-10-26 10:41:28,432][src.utils.utils][INFO] - Enforcing tags! <cfg.extras.enforce_tags=True>
+[2022-10-26 10:41:28,437][src.utils.utils][INFO] - Printing config tree with Rich! <cfg.extras.print_config=True>
+[2022-10-26 10:41:28,437][src.utils.rich_utils][WARN] - Field 'logger' not found in config. Skipping 'logger' config printing...
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.cifar10_datamodule.CIFAR10DataModule
+│       data_dir: /home/ubuntu/lightning-hydra-timm/data/
+│       batch_size: 320
+│       train_val_test_split:
+│       - 45000
+│       - 5000
+│       - 10000
+│       num_workers: 4
+│       pin_memory: false
+│
+├── model
+│   └── _target_: src.models.cifar10_module.CIFAR10LitModule
+│       optimizer:
+│         _target_: torch.optim.Adam
+│         _partial_: true
+│         lr: 0.001
+│         weight_decay: 0.0
+│       net:
+│         _target_: src.models.cifar10_module.create_model
+│         model: vit_base_patch32_224
+│         input_ch: 3
+│         num_cls: 10
+│
+├── callbacks
+│   └── model_checkpoint:
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint
+│         dirpath: /home/ubuntu/lightning-hydra-timm/logs/demo/runs/2022-10-26_10-41-28/checkpoints
+│         filename: epoch_{epoch:03d}
+│         monitor: val/acc
+│         verbose: false
+│         save_last: true
+│         save_top_k: 1
+│         mode: max
+│         auto_insert_metric_name: false
+│         save_weights_only: false
+│         every_n_train_steps: null
+│         train_time_interval: null
+│         every_n_epochs: null
+│         save_on_train_epoch_end: null
+│       early_stopping:
+│         _target_: pytorch_lightning.callbacks.EarlyStopping
+│         monitor: val/acc
+│         min_delta: 0.0
+│         patience: 100
+│         verbose: false
+│         mode: max
+│         strict: true
+│         check_finite: true
+│         stopping_threshold: null
+│         divergence_threshold: null
+│         check_on_train_epoch_end: null
+│       model_summary:
+│         _target_: pytorch_lightning.callbacks.RichModelSummary
+│         max_depth: -1
+│       rich_progress_bar:
+│         _target_: pytorch_lightning.callbacks.RichProgressBar
+│
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer
+│       default_root_dir: /home/ubuntu/lightning-hydra-timm/logs/demo/runs/2022-10-26_10-41-28
+│       min_epochs: 10
+│       max_epochs: 25
+│       accelerator: gpu
+│       devices: 1
+│       deterministic: false
+│       strategy: fsdp
+│       precision: 16
+│       num_nodes: 4
+│
+├── paths
+│   └── root_dir: /home/ubuntu/lightning-hydra-timm
+│       data_dir: /home/ubuntu/lightning-hydra-timm/data/
+│       log_dir: /home/ubuntu/lightning-hydra-timm/logs/
+│       output_dir: /home/ubuntu/lightning-hydra-timm/logs/demo/runs/2022-10-26_10-41-28
+│       work_dir: /home/ubuntu/lightning-hydra-timm
+│
+├── extras
+│   └── ignore_warnings: false
+│       enforce_tags: true
+│       print_config: true
+│
+├── task_name
+│   └── demo
+├── ckpt_path
+│   └── /home/ubuntu/lightning-hydra-timm/logs/train/runs/2022-10-26_10-15-26/checkpoints/epoch_023.ckpt
+├── tags
+│   └── ['cifar10', 'vit_base_patch32_224']
+└── seed
+    └── 12345
+[2022-10-26 10:41:28,488][__main__][INFO] - Instantiating datamodule <src.datamodules.cifar10_datamodule.CIFAR10DataModule>
+[2022-10-26 10:41:28,492][__main__][INFO] - Instantiating model <src.models.cifar10_module.CIFAR10LitModule>
+[2022-10-26 10:41:30,337][__main__][INFO] - Instantiating loggers...
+[2022-10-26 10:41:30,337][src.utils.utils][WARN] - Logger config is empty.
+[2022-10-26 10:41:30,337][__main__][INFO] - Instantiating trainer <pytorch_lightning.Trainer>
+Using 16bit native Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+[2022-10-26 10:41:31,208][__main__][INFO] - Starting testing!
+Files already downloaded and verified
+Files already downloaded and verified
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/4
+[2022-10-26 10:43:04,095][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:1 to store for rank: 0
+[2022-10-26 10:43:04,095][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 4 processes
+----------------------------------------------------------------------------------------------------
+
+Restoring states from the checkpoint path at /home/ubuntu/lightning-hydra-timm/logs/train/runs/2022-10-26_10-15-26/checkpoints/epoch_023.ckpt
+[2022-10-26 10:43:07,310][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:2 to store for rank: 0
+[2022-10-26 10:43:07,371][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:2 with 4 nodes.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loaded model weights from checkpoint at /home/ubuntu/lightning-hydra-timm/logs/train/runs/2022-10-26_10-15-26/checkpoints/epoch_023.ckpt
+/opt/conda/envs/timm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:302: PossibleUserWarning: Using `DistributedSampler` with the dataloaders. During `trainer.test()`, it is recommended to use `Trainer(devices=1)` to ensure each sample/batch gets evaluated exactly once. Otherwise, multi-device settings use `DistributedSampler` that replicates some samples to make sure all devices have same batch size in case of uneven inputs.
+  rank_zero_warn(
+Testing DataLoader 0: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:04<00:00,  1.82it/s]
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │    0.8367999792098999     │
+│         test/loss         │    0.5226902365684509     │
+└───────────────────────────┴───────────────────────────┘
+[2022-10-26 10:43:14,059][src.utils.utils][INFO] - Closing loggers...
+[2022-10-26 10:43:14,060][src.utils.utils][INFO] - Output dir: /home/ubuntu/lightning-hydra-timm/logs/demo/runs/2022-10-26_10-41-28

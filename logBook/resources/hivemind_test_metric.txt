@@ -1,0 +1,139 @@
+[2022-10-28 07:21:33,575][src.utils.utils][INFO] - Enforcing tags! <cfg.extras.enforce_tags=True>
+[2022-10-28 07:21:33,580][src.utils.utils][INFO] - Printing config tree with Rich! <cfg.extras.print_config=True>
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.cifar10_datamodule.CIFAR10DataModule
+│       data_dir: /home/gokul/lightning-hydra-timm/data/
+│       batch_size: 256
+│       train_val_test_split:
+│       - 45000
+│       - 5000
+│       - 10000
+│       num_workers: 4
+│       pin_memory: false
+│
+├── model
+│   └── _target_: src.models.cifar10_module.CIFAR10LitModule
+│       optimizer:
+│         _target_: torch.optim.Adam
+│         _partial_: true
+│         lr: 0.001
+│         weight_decay: 0.0
+│       net:
+│         _target_: src.models.cifar10_module.create_model
+│         model: vit_base_patch32_224
+│         input_ch: 3
+│         num_cls: 10
+│
+├── callbacks
+│   └── model_checkpoint:
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint
+│         dirpath: /home/gokul/lightning-hydra-timm/logs/demo/runs/2022-10-28_07-21-33/checkpoints
+│         filename: epoch_{epoch:03d}
+│         monitor: val/acc
+│         verbose: false
+│         save_last: true
+│         save_top_k: 1
+│         mode: max
+│         auto_insert_metric_name: false
+│         save_weights_only: false
+│         every_n_train_steps: null
+│         train_time_interval: null
+│         every_n_epochs: null
+│         save_on_train_epoch_end: null
+│       early_stopping:
+│         _target_: pytorch_lightning.callbacks.EarlyStopping
+│         monitor: val/acc
+│         min_delta: 0.0
+│         patience: 100
+│         verbose: false
+│         mode: max
+│         strict: true
+│         check_finite: true
+│         stopping_threshold: null
+│         divergence_threshold: null
+│         check_on_train_epoch_end: null
+│       model_summary:
+│         _target_: pytorch_lightning.callbacks.RichModelSummary
+│         max_depth: -1
+│       rich_progress_bar:
+│         _target_: pytorch_lightning.callbacks.RichProgressBar
+│
+├── logger
+│   └── tensorboard:
+│         _target_: pytorch_lightning.loggers.tensorboard.TensorBoardLogger
+│         save_dir: /home/gokul/lightning-hydra-timm/logs/demo/runs/2022-10-28_07-21-33/tensorboard/
+│         name: null
+│         log_graph: false
+│         default_hp_metric: true
+│         prefix: ''
+│
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer
+│       default_root_dir: /home/gokul/lightning-hydra-timm/logs/demo/runs/2022-10-28_07-21-33
+│       min_epochs: 10
+│       max_epochs: 25
+│       accelerator: auto
+│       devices: 1
+│       deterministic: false
+│       strategy:
+│         _target_: pytorch_lightning.strategies.HivemindStrategy
+│         target_batch_size: 8192
+│         host_maddrs:
+│         - /ip4/0.0.0.0/tcp/0
+│         - /ip4/0.0.0.0/udp/0/quic
+│       num_nodes: 1
+│
+├── paths
+│   └── root_dir: /home/gokul/lightning-hydra-timm
+│       data_dir: /home/gokul/lightning-hydra-timm/data/
+│       log_dir: /home/gokul/lightning-hydra-timm/logs/
+│       output_dir: /home/gokul/lightning-hydra-timm/logs/demo/runs/2022-10-28_07-21-33
+│       work_dir: /home/gokul/lightning-hydra-timm
+│
+├── extras
+│   └── ignore_warnings: false
+│       enforce_tags: true
+│       print_config: true
+│
+├── task_name
+│   └── demo
+├── ckpt_path
+│   └── logs/train/runs/2022-10-28_02-12-40/checkpoints/epoch_012.ckpt
+├── tags
+│   └── ['cifar10', 'vit_base_patch32_224']
+└── seed
+    └── 12345
+[2022-10-28 07:21:33,633][__main__][INFO] - Instantiating datamodule <src.datamodules.cifar10_datamodule.CIFAR10DataModule>
+[2022-10-28 07:21:33,639][__main__][INFO] - Instantiating model <src.models.cifar10_module.CIFAR10LitModule>
+[2022-10-28 07:21:37,196][__main__][INFO] - Instantiating loggers...
+[2022-10-28 07:21:37,196][src.utils.utils][INFO] - Instantiating logger <pytorch_lightning.loggers.tensorboard.TensorBoardLogger>
+[2022-10-28 07:21:37,199][__main__][INFO] - Instantiating trainer <pytorch_lightning.Trainer>
+
+Other machines can connect running the same command:
+INITIAL_PEERS=/ip4/10.128.0.4/tcp/40731/p2p/QmZqTMuEwJoL3d83Zd7kG2sEENZKAXLvjeKV6r4xd4Xpvj,/ip4/10.128.0.4/udp/51401/quic/p2p/QmZqTMuEwJoL3d83Zd7kG2sEENZKAXLvjeKV6r4xd4Xpvj python ...
+or passing the peers to the strategy:
+HivemindStrategy(initial_peers='/ip4/10.128.0.4/tcp/40731/p2p/QmZqTMuEwJoL3d83Zd7kG2sEENZKAXLvjeKV6r4xd4Xpvj,/ip4/10.128.0.4/udp/51401/quic/p2p/QmZqTMuEwJoL3d83Zd7kG2sEENZKAXLvjeKV6r4xd4Xpvj')
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+[2022-10-28 07:21:49,452][__main__][INFO] - Logging hyperparameters!
+[2022-10-28 07:21:49,474][__main__][INFO] - Starting testing!
+Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to /home/gokul/lightning-hydra-timm/data/cifar-10-python.tar.gz
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 170498071/170498071 [00:02<00:00, 67291003.67it/s]
+Extracting /home/gokul/lightning-hydra-timm/data/cifar-10-python.tar.gz to /home/gokul/lightning-hydra-timm/data/
+Files already downloaded and verified
+Restoring states from the checkpoint path at logs/train/runs/2022-10-28_02-12-40/checkpoints/epoch_012.ckpt
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loaded model weights from checkpoint at logs/train/runs/2022-10-28_02-12-40/checkpoints/epoch_012.ckpt
+Testing DataLoader 0: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 40/40 [00:32<00:00,  1.23it/s]
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │    0.9542999863624573     │
+│         test/loss         │    0.2232828587293625     │
+└───────────────────────────┴───────────────────────────┘
+Shutting down hivemind DHT.
+[2022-10-28 07:22:40,928][src.utils.utils][INFO] - Closing loggers...
+[2022-10-28 07:22:40,929][src.utils.utils][INFO] - Output dir: /home/gokul/lightning-hydra-timm/logs/demo/runs/2022-10-28_07-21-33

@@ -30,6 +30,7 @@ root = pyrootutils.setup_root(
 # https://github.com/ashleve/pyrootutils
 # ------------------------------------------------------------------------------------ #
 
+# import os
 from typing import List, Optional, Tuple
 
 import hydra
@@ -97,40 +98,41 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
 
     train_metrics = trainer.callback_metrics
-    test_metrics = {}
 
-    if trainer.node_rank == 0:
-        if cfg.get("script"):
-            log.info("Scripting Model ...")
+    # if trainer.node_rank == 0:
+    # if os.environ['NODE_RANK'] == 0:
 
-            scripted_model = model.cpu().to_torchscript(method="script")
-            torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model.scripted.pt")
+    if cfg.get("script"):
+        log.info("Scripting Model ...")
 
-            log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.scripted.pt")
+        scripted_model = model.cpu().to_torchscript(method="script")
+        torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model.scripted.pt")
 
-        if cfg.get("trace"):
-            # pass
-            log.info("Tracing Model ...")
+        log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.scripted.pt")
 
-            example_forward = torch.rand(1, 3, 224, 224, dtype=torch.float32)
-            example_pass = torch.rand(1, 3, 28, 28, dtype=torch.float32)
-            traced_model = torch.jit.trace_module(
-                model.cpu(), inputs={"forward": example_forward, "pass_jit": example_pass}
-            )
-            torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
+    if cfg.get("trace"):
+        # pass
+        log.info("Tracing Model ...")
 
-            log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
+        example_forward = torch.rand(1, 3, 224, 224, dtype=torch.float32)
+        example_pass = torch.rand(1, 3, 28, 28, dtype=torch.float32)
+        traced_model = torch.jit.trace_module(
+            model.cpu(), inputs={"forward": example_forward, "pass_jit": example_pass}
+        )
+        torch.jit.save(traced_model, f"{cfg.paths.output_dir}/model.traced.pt")
 
-        if cfg.get("test"):
-            log.info("Starting testing!")
-            ckpt_path = trainer.checkpoint_callback.best_model_path
-            if ckpt_path == "":
-                log.warning("Best ckpt not found! Using current weights for testing...")
-                ckpt_path = None
-            trainer.test(model=model, datamodule=datamodule, ckpt_path=ckpt_path)
-            log.info(f"Best ckpt path: {ckpt_path}")
+        log.info(f"Saving traced model to {cfg.paths.output_dir}/model.traced.pt")
 
-        test_metrics = trainer.callback_metrics
+    if cfg.get("test"):
+        log.info("Starting testing!")
+        ckpt_path = trainer.checkpoint_callback.best_model_path
+        if ckpt_path == "":
+            log.warning("Best ckpt not found! Using current weights for testing...")
+            ckpt_path = None
+        trainer.test(model=model, datamodule=datamodule, ckpt_path=ckpt_path)
+        log.info(f"Best ckpt path: {ckpt_path}")
+
+    test_metrics = trainer.callback_metrics
 
     # merge train and test metrics
     metric_dict = {**train_metrics, **test_metrics}
@@ -144,6 +146,9 @@ def main(cfg: DictConfig) -> Optional[float]:
     # train the model
     metric_dict, _ = train(cfg)
 
+    # metric_value = None
+
+    # if os.environ['NODE_RANK'] == 0:
     # safely retrieve metric value for hydra-based hyperparameter optimization
     metric_value = utils.get_metric_value(
         metric_dict=metric_dict, metric_name=cfg.get("optimized_metric")

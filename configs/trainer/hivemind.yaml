@@ -4,6 +4,9 @@ defaults:
 strategy:
   _target_: pytorch_lightning.strategies.HivemindStrategy
   target_batch_size: 8192
+  host_maddrs: ["/ip4/0.0.0.0/tcp/0", "/ip4/0.0.0.0/udp/0/quic"]
+  # initial_peers: ["/ip4/34.136.212.132/tcp/35567/p2p/QmY5DBz5agnkSqRwxYXegPUGa1aC7Js5RFou9mK8MSuvXT", "/ip4/34.136.212.132/udp/37266/quic/p2p/QmY5DBz5agnkSqRwxYXegPUGa1aC7Js5RFou9mK8MSuvXT"]
+
 
 accelerator: gpu
 devices: 1

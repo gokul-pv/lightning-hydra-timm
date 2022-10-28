@@ -27,8 +27,8 @@ awscli==1.25.90
 
 # Training
 fairscale==0.4.12
-hivemind==1.1.2
-protobuf==3.20.3
+# hivemind==1.1.2
+# protobuf==3.20.3
 
 # --------- others --------- #
 pyrootutils     # standardizing the project root setup
