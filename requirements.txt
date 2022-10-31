@@ -23,7 +23,7 @@ gradio==3.3.1
 
 #AWS
 boto3==1.24.88
-awscli==1.25.90
+awscli==1.26.4
 
 # Training
 # fairscale==0.4.12
