@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - model: timm_model.yaml # very important
+  - paths: default.yaml
+  - extras: default.yaml
+  - hydra: default.yaml
+  - experiment: null
+
+task_name: "robustness"
+
+input_image: "./logBook/resources/imagenet/10.jpg"
+
+# 1 - PGD
+# 2 - FGSM
+# 3 - Pixel Dropout
+# 4 - Random Noise
+# 5 - Random Brightness
+
+model_robusness: [1,2,3,4,5]
+
+target_index: 195

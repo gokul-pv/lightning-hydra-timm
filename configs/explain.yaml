@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - model: timm_model.yaml # very important
+  - paths: default.yaml
+  - extras: default.yaml
+  - hydra: default.yaml
+  - experiment: null
+
+task_name: "explain"
+
+input_image: "./logBook/resources/imagenet/10.jpg"
+
+# 1 - IntegratedGradients
+# 2 - IG with Noise Tunnel
+# 3 - SHAP
+# 4 - Occlusion
+# 5 - Saliency
+# 6 - GradCAM
+# 7 - GradCAM++
+
+model_explain: [1,2,3,4,5,6,7]

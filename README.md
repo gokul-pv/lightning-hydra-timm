@@ -13,7 +13,7 @@
 
 ## Description
 
-- Convenient all-in-one technology stack for deep learning prototyping - allows you to rapidly iterate over new models provided with timm, datasets and tasks on different hardware accelerators like CPUs, multi-GPUs or TPUs.
+- A convenient all-in-one technology stack for deep learning prototyping - allows you to rapidly iterate over new models provided with timm, datasets and tasks on different hardware accelerators like CPUs, multi-GPUs or TPUs.
 - A collection of best practices for efficient workflow and reproducibility.
 - Thoroughly commented - you can use this repo as a reference and educational resource.
 
@@ -24,6 +24,14 @@
 [Hydra](https://github.com/facebookresearch/hydra) - a framework for elegantly configuring complex applications. The key feature is the ability to dynamically create a hierarchical configuration by composition and override it through config files and the command line.
 
 [Pytorch Image Models](https://rwightman.github.io/pytorch-image-models/) - Py**T**orch **Im**age **M**odels (`timm`) is a collection of image models, layers, utilities, optimizers, schedulers, data-loaders / augmentations, and reference training / validation scripts that aim to pull together a wide variety of SOTA models with ability to reproduce ImageNet training results.
+
+Click on the links below for more
+
+- [Distributed Training](./logBook/DistributedTraining.md)
+- [Model explainability and robustness](./logBook/ModelExplainaibilty.md)
+- [Train CIFAR10 on Resnet](#cifar10-training)
+- [Hyper-parameter sweep using optuna](#hyperparameter-search)
+- [Demo webapp using Gradio, TorchScript and AWS](#deploy-using-gradio-and-torchscript)
 
 ## How to run
 
@@ -61,11 +69,13 @@ python src/train.py trainer=gpu
 python src/train.py experiment=experiment_name.yaml
 ```
 
-- You can override any parameter from command line like this
+- You can override any parameter from the command line like this
 
 ```bash
 python src/train.py trainer.max_epochs=20 datamodule.batch_size=64
 ```
+
+#### CIFAR10 Training
 
 - For training CIFAR10 dataset using Resnet18 from timm
 
@@ -82,8 +92,9 @@ docker pull gokulpv/lighteninghydratimm:latest
 
 # To run the docker image. NOTE: To get the trained model checkpoint and all the logs on the host machine, you'll have to volume mount your directory inside docker.
 docker run -it --volume /workspace/lightning-hydra-timm/dockerMount:/opt/src/logs gokulpv/lighteninghydratimm python src/train.py experiment=cifar10_example
-
 ```
+
+#### Hyperparameter Search
 
 - To do a Hyperparam sweep for CIFAR10 dataset with Resnet18 from timm,
 
@@ -96,8 +107,9 @@ dvc pull -r gdrive
 
 # Logs are also available at
 https://tensorboard.dev/experiment/4Eki3IjVTGaSGtgE4HnCGg/#scalars
-
 ```
+
+#### Deploy using Gradio and TorchScript
 
 - To build a demo app for deployment using gradio,
 
@@ -126,7 +138,7 @@ make build-demo
 docker pull gokulpv/demogradio:latest
 ```
 
-- To download scripted model from AWS S3 and run the demo application, do the following:
+- To download a scripted model from AWS S3 and run the demo application, do the following:
 
 ```bash
 # Train cifar10 using resnet18 from timm and save scripted model to S3

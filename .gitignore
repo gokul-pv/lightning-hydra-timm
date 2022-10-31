@@ -156,3 +156,4 @@ imagenet_1k.json
 /logs
 /data
 /flagged
+imagenet_classes.txt

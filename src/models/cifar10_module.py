@@ -4,7 +4,8 @@ import timm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from fairscale.nn import auto_wrap, checkpoint_wrapper, wrap
+
+# from fairscale.nn import auto_wrap, checkpoint_wrapper, wrap
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
@@ -66,10 +67,11 @@ class CIFAR10LitModule(LightningModule):
         self.predict_transform = torch.nn.Sequential(
             T.Resize([224, 224]),
             T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            # T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         )
 
-    def configure_sharded_model(self):
-        self.net = auto_wrap(self.net)
+    # def configure_sharded_model(self):
+    #     self.net = auto_wrap(self.net)
 
     def forward(self, x: torch.Tensor):
         return self.net(x)
