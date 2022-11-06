@@ -264,7 +264,7 @@ curl -X POST  "http://localhost:8081/models?url=https://myemlobucket.s3.ap-south
 curl -v -X PUT "http://localhost:8081/models/cifar10_model?min_worker=2"
 ```
 
-See the logs [here](./resources/procution_log.txt).
+See the logs [here](./resources/prodcution_log.txt).
 
 To check if the deployment is correct, run the test cases in another docker container as below
 
