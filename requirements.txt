@@ -19,7 +19,7 @@ hydra-optuna-sweeper==1.2.0
 # comet-ml
 
 # UI for demo
-gradio==3.3.1
+gradio==3.9
 
 # Production
 torchserve==0.6.0
