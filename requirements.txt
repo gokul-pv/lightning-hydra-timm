@@ -33,7 +33,7 @@ torch-tb-profiler==0.4.0
 # grpcio-tools==1.50.0
 
 #AWS
-boto3==1.24.88
+boto3==1.26.3
 awscli==1.25.90
 
 # Training
