@@ -157,3 +157,4 @@ imagenet_1k.json
 /data
 /flagged
 imagenet_classes.txt
+model_store/

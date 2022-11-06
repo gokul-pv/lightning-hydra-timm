@@ -21,6 +21,17 @@ hydra-optuna-sweeper==1.2.0
 # UI for demo
 gradio==3.3.1
 
+# Production
+torchserve==0.6.0
+torch-model-archiver==0.6.0
+# torch-workflow-archiver
+torch-tb-profiler==0.4.0
+
+#gRPC
+# grpcio==1.50.0
+# protobuf==3.20.3
+# grpcio-tools==1.50.0
+
 #AWS
 boto3==1.24.88
 awscli==1.25.90
@@ -28,7 +39,6 @@ awscli==1.25.90
 # Training
 # fairscale==0.4.12
 # hivemind==1.1.2
-# protobuf==3.20.3
 
 # Model explanation
 captum==0.5.0

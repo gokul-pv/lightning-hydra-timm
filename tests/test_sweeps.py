@@ -8,6 +8,7 @@ overrides = ["logger=[]"]
 
 
 @RunIf(sh=True)
+@RunIf(min_gpus=1)
 @pytest.mark.slow
 def test_experiments(tmp_path):
     """Test running all available experiment configs with fast_dev_run=True."""

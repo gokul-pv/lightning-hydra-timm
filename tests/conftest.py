@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pyrootutils
 import pytest
 from hydra import compose, initialize
@@ -77,3 +79,40 @@ def cfg_eval(cfg_eval_global, tmp_path) -> DictConfig:
     yield cfg
 
     GlobalHydra.instance().clear()
+
+
+@pytest.fixture()
+def cifar10_images() -> Path:
+    rel_path = Path(__file__).parent / "resources" / "cifar10"
+    files = [file_name for file_name in rel_path.iterdir() if file_name.is_file()]
+    return files
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--public_ip",
+        action="append",
+        default=[],
+        help="public ip of the server",
+    )
+    parser.addoption(
+        "--model",
+        action="append",
+        default=[],
+        help="public ip of the server",
+    )
+    parser.addoption(
+        "--grpc_client",
+        action="append",
+        default=[],
+        help="public ip of the server",
+    )
+
+
+def pytest_generate_tests(metafunc):
+    if "public_ip" in metafunc.fixturenames:
+        metafunc.parametrize("public_ip", metafunc.config.getoption("public_ip"))
+    if "model" in metafunc.fixturenames:
+        metafunc.parametrize("model", metafunc.config.getoption("model"))
+    if "grpc_client" in metafunc.fixturenames:
+        metafunc.parametrize("grpc_client", metafunc.config.getoption("grpc_client"))

@@ -1,0 +1,99 @@
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl "http://localhost:8081/models"
+{
+  "models": []
+}
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl -X POST  "http://localhost:8081/models?url=https://myemlobucket.s3.ap-south-1.amazonaws.com/torchServeModels/cifar10.mar&model_name=cifar10_model"
+{
+  "status": "Model \"cifar10_model\" Version: 1.0 registered with 0 initial workers. Use scale workers API to add workers for the model."
+}
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl "http://localhost:8081/models"
+{
+  "models": [
+    {
+      "modelName": "cifar10_model",
+      "modelUrl": "https://myemlobucket.s3.ap-south-1.amazonaws.com/torchServeModels/cifar10.mar"
+    }
+  ]
+}
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl "http://localhost:8081/models/cifar10_model"
+[
+  {
+    "modelName": "cifar10_model",
+    "modelVersion": "1.0",
+    "modelUrl": "https://myemlobucket.s3.ap-south-1.amazonaws.com/torchServeModels/cifar10.mar",
+    "runtime": "python",
+    "minWorkers": 0,
+    "maxWorkers": 0,
+    "batchSize": 1,
+    "maxBatchDelay": 100,
+    "loadedAtStartup": false,
+    "workers": []
+  }
+]
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl -v -X PUT "http://localhost:8081/models/cifar10_model?min_worker=2"
+*   Trying 127.0.0.1:8081...
+* Connected to localhost (127.0.0.1) port 8081 (#0)
+> PUT /models/cifar10_model?min_worker=2 HTTP/1.1
+> Host: localhost:8081
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 202 Accepted
+< content-type: application/json
+< x-request-id: f66b2508-de90-4365-935f-17cdf11bdb97
+< Pragma: no-cache
+< Cache-Control: no-cache; no-store, must-revalidate, private
+< Expires: Thu, 01 Jan 1970 00:00:00 UTC
+< content-length: 47
+< connection: keep-alive
+<
+{
+  "status": "Processing worker updates..."
+}
+* Connection #0 to host localhost left intact
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl "http://localhost:8081/models/cifar10_model"
+[
+  {
+    "modelName": "cifar10_model",
+    "modelVersion": "1.0",
+    "modelUrl": "https://myemlobucket.s3.ap-south-1.amazonaws.com/torchServeModels/cifar10.mar",
+    "runtime": "python",
+    "minWorkers": 2,
+    "maxWorkers": 2,
+    "batchSize": 1,
+    "maxBatchDelay": 100,
+    "loadedAtStartup": false,
+    "workers": [
+      {
+        "id": "9000",
+        "startTime": "2022-11-06T06:42:39.920Z",
+        "status": "READY",
+        "memoryUsage": 0,
+        "pid": 71,
+        "gpu": false,
+        "gpuUsage": "N/A"
+      },
+      {
+        "id": "9001",
+        "startTime": "2022-11-06T06:42:39.921Z",
+        "status": "READY",
+        "memoryUsage": 0,
+        "pid": 74,
+        "gpu": false,
+        "gpuUsage": "N/A"
+      }
+    ]
+  }
+]
+ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$ curl "http://127.0.0.1:8080/predictions/cifar10_model" -T tests/resources/cifar10/0_cat.png
+{
+  "cat": 0.9999270439147949,
+  "frog": 2.502223833289463e-05,
+  "dog": 2.493208012310788e-05,
+  "bird": 1.9226739823352545e-05,
+  "airplane": 2.7500573196448386e-06
+}ubuntu@ip-172-31-47-4:~/lightning-hydra-timm$

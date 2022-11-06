@@ -5,3 +5,4 @@ dockerMount
 data/*
 eval.log
 train.log
+model_store
