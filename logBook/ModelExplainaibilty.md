@@ -1,4 +1,8 @@
+<div align="center">
+
 ## Model Explainability
+
+</div>
 
 Model explainability refers to the concept of being able to understand the machine learning model. For example – if a healthcare model is predicting whether a patient is suffering from a particular disease or not. The medical practitioners need to know what parameters the model is taking into account or if the model contains any bias.
 

@@ -1,8 +1,13 @@
+import os  # comment if not using AWS inferentia
+
 import torch
 import torch.nn.functional as F
+import torch_neuron  # comment if not using AWS inferentia
 import torchvision.transforms as T
 from ts.torch_handler.vision_handler import VisionHandler
 from ts.utils.util import map_class_to_label
+
+os.environ["NEURON_RT_NUM_CORES"] = "1"  # comment if not using AWS inferentia
 
 
 class ImageClassifier(VisionHandler):

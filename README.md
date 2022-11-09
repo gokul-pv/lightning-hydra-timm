@@ -29,6 +29,8 @@ Click on the links below for more
 
 - [Distributed Training](./logBook/DistributedTraining.md)
 - [Model explainability and robustness](./logBook/ModelExplainaibilty.md)
+- [Model serving with TorchServe](./logBook/TorchServe.md)
+- [Training on Habana chips and deployment on AWS Accelerators](./logBook/AWSAccelerators.md)
 - [Train CIFAR10 on Resnet](#cifar10-training)
 - [Hyper-parameter sweep using optuna](#hyperparameter-search)
 - [Demo webapp using Gradio, TorchScript and AWS](#deploy-using-gradio-and-torchscript)
