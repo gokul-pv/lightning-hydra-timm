@@ -1,6 +1,9 @@
 import requests
 
+from tests.helpers.run_if import RunIf
 
+
+@RunIf(torchserve=True)
 def test_serve_inference(cifar10_images, public_ip, model):
 
     for image in cifar10_images:

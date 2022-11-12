@@ -176,6 +176,8 @@ pid 14381: current throughput 226.9, latency p50=0.276 p90=0.323
 pid 14381: current throughput 234.9, latency p50=0.267 p90=0.294
 ```
 
+![Neuron utilization](./resources/inf1_neuron_util.png)
+
 We can improve the performance by using batch inferencing. Checkout the [link](https://pytorch.org/serve/batch_inference_with_ts.html).
 
 Further, if you want to customize the docker image, refer to this [link](https://github.com/aws-neuron/aws-neuron-sdk/blob/master/containers/docker-example/inference/Dockerfile-inference).
@@ -217,6 +219,6 @@ WORLD_SIZE - required; how many workers are in the cluster
 NODE_RANK - required; id of the node in the cluster
 ```
 
-If too much training sounds boring, head over to serverless deployment in AWS Lambda.
+If too much training sounds boring, checkout this [link](https://frontend-next-js-ten.vercel.app/) where both frontend and backend are serverless deployments.
 
 ![](https://media.tenor.com/AhmPNXd64JEAAAAM/boring-boss-baby.gif)

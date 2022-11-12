@@ -5,7 +5,10 @@ import torchvision.transforms as T
 from captum.attr import visualization as viz
 from PIL import Image
 
+from tests.helpers.run_if import RunIf
 
+
+@RunIf(torchserve=True)
 def test_serve_explain(cifar10_images, public_ip, model):
 
     for image in cifar10_images:

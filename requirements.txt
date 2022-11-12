@@ -22,8 +22,8 @@ hydra-optuna-sweeper==1.2.0
 # gradio==3.3.1
 
 # Production
-torchserve==0.6.0
-torch-model-archiver==0.6.0
+# torchserve==0.6.0
+# torch-model-archiver==0.6.0
 # torch-workflow-archiver
 # torch-tb-profiler==0.4.0
 

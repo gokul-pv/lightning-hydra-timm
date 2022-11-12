@@ -1,7 +1,10 @@
 import json
 import subprocess
 
+from tests.helpers.run_if import RunIf
 
+
+@RunIf(torchserve=True)
 def test_serve_grpc_inference(cifar10_images, grpc_client, model):
 
     for image in cifar10_images:

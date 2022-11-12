@@ -19,6 +19,7 @@ from tests.helpers.package_available import (
     _MLFLOW_AVAILABLE,
     _NEPTUNE_AVAILABLE,
     _SH_AVAILABLE,
+    _TORCHSERVER_AVAILABLE,
     _TPU_AVAILABLE,
     _WANDB_AVAILABLE,
 )
@@ -52,6 +53,7 @@ class RunIf:
         neptune: bool = False,
         comet: bool = False,
         mlflow: bool = False,
+        torchserve: bool = False,
         **kwargs,
     ):
         """
@@ -69,6 +71,7 @@ class RunIf:
             neptune: if `neptune` module is required to run the test
             comet: if `comet` module is required to run the test
             mlflow: if `mlflow` module is required to run the test
+            torchserve: if `torchserve` module is required to run the test
             kwargs: native pytest.mark.skipif keyword arguments
         """
         conditions = []
@@ -130,6 +133,10 @@ class RunIf:
         if mlflow:
             conditions.append(not _MLFLOW_AVAILABLE)
             reasons.append("mlflow")
+
+        if torchserve:
+            conditions.append(not _TORCHSERVER_AVAILABLE)
+            reasons.append("torchserve")
 
         reasons = [rs for cond, rs in zip(conditions, reasons) if cond]
         return pytest.mark.skipif(
