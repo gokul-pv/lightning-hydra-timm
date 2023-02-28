@@ -34,7 +34,7 @@ hydra-optuna-sweeper==1.2.0
 
 #AWS
 boto3==1.24.88
-awscli==1.25.90
+awscli==1.27.81
 
 # Training
 # fairscale==0.4.12
